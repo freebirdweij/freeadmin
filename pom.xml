@@ -5,16 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.zhengjie</groupId>
-    <artifactId>eladmin</artifactId>
+    <artifactId>freeadmin</artifactId>
     <packaging>pom</packaging>
     <version>2.6</version>
 
     <modules>
-        <module>eladmin-common</module>
-        <module>eladmin-logging</module>
-        <module>eladmin-system</module>
-        <module>eladmin-tools</module>
-        <module>eladmin-generator</module>
+        <module>freeadmin-common</module>
+        <module>freeadmin-logging</module>
+        <module>freeadmin-system</module>
+        <module>freeadmin-tools</module>
+        <module>freeadmin-generator</module>
+        <module>freeadmin-test</module>
+        <module>freeadmin-boot</module>
     </modules>
 
     <name>EL-ADMIN 后台管理</name>
@@ -36,6 +38,7 @@
         <druid.version>1.1.22</druid.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
+        <m2e.apt.activation>jdt_apt</m2e.apt.activation>
     </properties>
 
     <dependencies>
