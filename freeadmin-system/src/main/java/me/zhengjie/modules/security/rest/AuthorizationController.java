@@ -78,13 +78,13 @@ public class AuthorizationController {
         // 查询验证码
         String code = (String) redisUtils.get(authUser.getUuid());
         // 清除验证码
-        redisUtils.del(authUser.getUuid());
-        if (StringUtils.isBlank(code)) {
-            throw new BadRequestException("验证码不存在或已过期");
-        }
-        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-            throw new BadRequestException("验证码错误");
-        }
+		
+		  redisUtils.del(authUser.getUuid()); if (StringUtils.isBlank(code)) { throw
+		  new BadRequestException("验证码不存在或已过期"); } if
+		  (StringUtils.isBlank(authUser.getCode()) ||
+		  !authUser.getCode().equalsIgnoreCase(code)) { throw new
+		  BadRequestException("验证码错误"); }
+		 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
