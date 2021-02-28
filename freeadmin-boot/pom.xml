@@ -47,6 +47,12 @@
         
         <dependency>
             <groupId>me.zhengjie</groupId>
+            <artifactId>freeadmin-storemanage</artifactId>
+            <version>2.6</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>me.zhengjie</groupId>
             <artifactId>freeadmin-test</artifactId>
             <version>2.6</version>
         </dependency>

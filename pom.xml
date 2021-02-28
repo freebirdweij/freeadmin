@@ -17,6 +17,7 @@
         <module>freeadmin-generator</module>
         <module>freeadmin-test</module>
         <module>freeadmin-boot</module>
+        <module>freeadmin-storemanage</module>
     </modules>
 
     <name>EL-ADMIN 后台管理</name>
