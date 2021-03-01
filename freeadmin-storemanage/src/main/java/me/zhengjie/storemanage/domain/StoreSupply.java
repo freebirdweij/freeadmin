@@ -16,6 +16,10 @@
 package me.zhengjie.storemanage.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.modules.system.domain.Dept;
+import me.zhengjie.modules.system.domain.User;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -31,7 +35,8 @@ import java.io.Serializable;
 * @date 2021-02-27
 **/
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="store_supply")
 public class StoreSupply implements Serializable {
 

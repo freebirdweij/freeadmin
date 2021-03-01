@@ -26,7 +26,7 @@ import org.mapstruct.ReportingPolicy;
 * @author freebirdweij
 * @date 2021-02-27
 **/
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {StoreSupplyMapper.class} , unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface StoreGoodsMapper extends BaseMapper<StoreGoodsDto, StoreGoods> {
 
 }

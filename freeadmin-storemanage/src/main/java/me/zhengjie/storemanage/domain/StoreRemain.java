@@ -16,6 +16,11 @@
 package me.zhengjie.storemanage.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.modules.system.domain.Dept;
+import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.storemanage.service.dto.GoodsMiddleDto;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -32,7 +37,8 @@ import java.io.Serializable;
 * @date 2021-02-27
 **/
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="store_remain")
 public class StoreRemain implements Serializable {
 
@@ -52,6 +58,11 @@ public class StoreRemain implements Serializable {
     @ApiModelProperty(value = "货物ID")
     private Long goodsId;
 
+    @OneToOne
+    @JoinColumn(name = "goods_id",insertable = false,updatable = false)
+    @ApiModelProperty(value = "货物")
+    private StoreGoods goods;
+    
     @Column(name = "counts",nullable = false)
     @NotNull
     @ApiModelProperty(value = "库存数量")

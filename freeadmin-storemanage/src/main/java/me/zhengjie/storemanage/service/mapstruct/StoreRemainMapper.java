@@ -16,6 +16,8 @@
 package me.zhengjie.storemanage.service.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
+import me.zhengjie.modules.system.service.mapstruct.DeptMapper;
+import me.zhengjie.modules.system.service.mapstruct.UserMapper;
 import me.zhengjie.storemanage.domain.StoreRemain;
 import me.zhengjie.storemanage.service.dto.StoreRemainDto;
 import org.mapstruct.Mapper;
@@ -26,7 +28,7 @@ import org.mapstruct.ReportingPolicy;
 * @author freebirdweij
 * @date 2021-02-27
 **/
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {StoreGoodsMapper.class, StoreSupplyMapper.class} , unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface StoreRemainMapper extends BaseMapper<StoreRemainDto, StoreRemain> {
 
 }

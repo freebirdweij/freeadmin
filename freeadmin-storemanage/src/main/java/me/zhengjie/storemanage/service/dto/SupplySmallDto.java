@@ -16,12 +16,8 @@
 package me.zhengjie.storemanage.service.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.sql.Timestamp;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
 * @website https://el-admin.vip
@@ -29,9 +25,8 @@ import java.math.BigDecimal;
 * @author freebirdweij
 * @date 2021-02-27
 **/
-@Getter
-@Setter
-public class StoreSupplyDto implements Serializable {
+@Data
+public class SupplySmallDto implements Serializable {
 
     /** ID */
     private Long supplyId;
@@ -42,36 +37,4 @@ public class StoreSupplyDto implements Serializable {
     /** 供应商名称 */
     private String name;
 
-    /** 联系人 */
-    private String contact;
-
-    /** 联系电话 */
-    private String phone;
-
-    /** 传真 */
-    private String fax;
-
-    /** 地址 */
-    private String address;
-
-    /** 邮政编码 */
-    private String zipcode;
-
-    /** 网址 */
-    private String webadd;
-
-    /** 邮箱 */
-    private String email;
-
-    /** 创建者 */
-    private String createBy;
-
-    /** 更新者 */
-    private String updateBy;
-
-    /** 创建日期 */
-    private Timestamp createTime;
-
-    /** 更新时间 */
-    private Timestamp updateTime;
 }

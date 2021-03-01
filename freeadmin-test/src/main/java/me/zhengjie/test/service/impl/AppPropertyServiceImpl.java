@@ -102,7 +102,7 @@ public class AppPropertyServiceImpl implements AppPropertyService {
             map.put("存放部门", appProperty.getDept().getName());
             map.put("责任人", appProperty.getUser() == null ? "" : appProperty.getUser().getUsername());
             map.put("创建者", appProperty.getCreateBy());
-            map.put("更新者", appProperty.getUpdatedBy());
+            map.put("更新者", appProperty.getUpdateBy());
             map.put("创建日期", appProperty.getCreateTime());
             map.put("更新时间", appProperty.getUpdateTime());
             list.add(map);

@@ -16,6 +16,9 @@
 package me.zhengjie.storemanage.service.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -26,7 +29,8 @@ import java.io.Serializable;
 * @author freebirdweij
 * @date 2021-02-27
 **/
-@Data
+@Getter
+@Setter
 public class StoreGoodsDto implements Serializable {
 
     /** ID */
@@ -44,6 +48,8 @@ public class StoreGoodsDto implements Serializable {
     /** 供应商 */
     private Long supplyId;
 
+    private SupplySmallDto supply;
+    
     /** 单价 */
     private BigDecimal price;
 

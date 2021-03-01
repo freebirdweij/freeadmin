@@ -16,6 +16,10 @@
 package me.zhengjie.storemanage.service.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.base.BaseDTO;
+
 import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -26,8 +30,9 @@ import java.io.Serializable;
 * @author freebirdweij
 * @date 2021-02-27
 **/
-@Data
-public class StoreRemainDto implements Serializable {
+@Getter
+@Setter
+public class StoreRemainDto extends BaseDTO implements Serializable {
 
     /** ID */
     private Long remainId;
@@ -37,6 +42,8 @@ public class StoreRemainDto implements Serializable {
 
     /** 货物ID */
     private Long goodsId;
+    
+    private GoodsMiddleDto goods;
 
     /** 库存数量 */
     private Long counts;
@@ -44,15 +51,4 @@ public class StoreRemainDto implements Serializable {
     /** 库存金额 */
     private BigDecimal amount;
 
-    /** 创建者 */
-    private String createBy;
-
-    /** 更新者 */
-    private String updateBy;
-
-    /** 创建日期 */
-    private Timestamp createTime;
-
-    /** 更新时间 */
-    private Timestamp updateTime;
 }
