@@ -30,20 +30,17 @@ public class StoreRemainQueryCriteria{
 
     /** 精确 */
     @Query
-    private Long remainId;
-
-    /** 精确 */
-    @Query
     private Long storeId;
 
-    /** 精确 */
-    @Query
-    private Long goodsId;
-
     /** 模糊 */
-    @Query(type = Query.Type.INNER_LIKE)
-    private String updateBy;
-    /** BETWEEN */
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> updateTime;
+    @Query(type = Query.Type.INNER_LIKE,joinName = "goods", propName="goodsCode")
+    private String goodsCode;
+
+    /** 精确 */
+    @Query(joinName = "goods", propName="name")
+    private String goodsName;
+    
+    /** 模糊 */
+    @Query(type = Query.Type.INNER_LIKE,joinName = "goods.supply", propName="name")
+    private String supplyName;
 }

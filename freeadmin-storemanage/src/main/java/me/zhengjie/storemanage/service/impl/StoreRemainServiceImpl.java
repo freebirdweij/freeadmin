@@ -19,6 +19,7 @@ import me.zhengjie.storemanage.domain.StoreRemain;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.storemanage.repository.StoreGoodsRepository;
 import me.zhengjie.storemanage.repository.StoreRemainRepository;
 import me.zhengjie.storemanage.service.StoreRemainService;
 import me.zhengjie.storemanage.service.dto.StoreRemainDto;
@@ -48,6 +49,7 @@ import java.util.LinkedHashMap;
 public class StoreRemainServiceImpl implements StoreRemainService {
 
     private final StoreRemainRepository storeRemainRepository;
+    private final StoreGoodsRepository storeGoodsRepository;
     private final StoreRemainMapper storeRemainMapper;
 
     @Override
@@ -72,6 +74,7 @@ public class StoreRemainServiceImpl implements StoreRemainService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public StoreRemainDto create(StoreRemain resources) {
+    	storeGoodsRepository.save(resources.getGoods());
         return storeRemainMapper.toDto(storeRemainRepository.save(resources));
     }
 
