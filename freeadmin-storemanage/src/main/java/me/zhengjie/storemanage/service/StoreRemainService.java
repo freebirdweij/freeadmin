@@ -66,6 +66,18 @@ public interface StoreRemainService {
     * @param resources /
     */
     void update(StoreRemain resources);
+    
+    /**
+    * 编辑
+    * @param resources /
+    */
+    void ingood(StoreRemain resources);
+    
+    /**
+    * 编辑
+    * @param resources /
+    */
+    void outgood(StoreRemain resources);
 
     /**
     * 多选删除

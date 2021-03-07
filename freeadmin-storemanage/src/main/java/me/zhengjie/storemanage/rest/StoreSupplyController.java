@@ -59,6 +59,15 @@ public class StoreSupplyController {
         return new ResponseEntity<>(storeSupplyService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
+    @GetMapping(value = "/search")
+    @Log("查询供应商")
+    @ApiOperation("查询供应商")
+    @PreAuthorize("@el.check('storeSupply:list')")
+    public ResponseEntity<Object> search(StoreSupplyQueryCriteria criteria){
+    	//criteria.setName(keyword);
+        return new ResponseEntity<>(storeSupplyService.queryAll(criteria),HttpStatus.OK);
+    }
+
     @PostMapping
     @Log("新增供应商")
     @ApiOperation("新增供应商")

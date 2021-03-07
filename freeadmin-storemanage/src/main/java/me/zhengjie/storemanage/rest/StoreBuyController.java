@@ -17,7 +17,9 @@ package me.zhengjie.storemanage.rest;
 
 import me.zhengjie.annotation.Log;
 import me.zhengjie.storemanage.domain.StoreRemain;
+import me.zhengjie.storemanage.service.StoreGoodsService;
 import me.zhengjie.storemanage.service.StoreRemainService;
+import me.zhengjie.storemanage.service.dto.StoreGoodsDto;
 import me.zhengjie.storemanage.service.dto.StoreRemainQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 import java.io.IOException;
+import java.math.BigDecimal;
+
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -42,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 public class StoreBuyController {
 
     private final StoreRemainService storeRemainService;
+    private final StoreGoodsService storeGoodsService;
 
     @Log("导出数据")
     @ApiOperation("导出数据")
@@ -63,7 +68,10 @@ public class StoreBuyController {
     @Log("新增库存")
     @ApiOperation("新增库存")
     @PreAuthorize("@el.check('storeRemain:add')")
-    public ResponseEntity<Object> create(@Validated @RequestBody StoreRemain resources){
+    public ResponseEntity<Object> create(@RequestBody StoreRemain resources){
+    	StoreGoodsDto storeGoodsDto = storeGoodsService.create(resources.getGoods());
+    	resources.setGoodsId(storeGoodsDto.getGoodsId());
+    	resources.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(resources.getCounts())));
         return new ResponseEntity<>(storeRemainService.create(resources),HttpStatus.CREATED);
     }
 
@@ -73,6 +81,24 @@ public class StoreBuyController {
     @PreAuthorize("@el.check('storeRemain:edit')")
     public ResponseEntity<Object> update(@Validated @RequestBody StoreRemain resources){
         storeRemainService.update(resources);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping(value = "/ingood")
+    @Log("进货")
+    @ApiOperation("进货")
+    @PreAuthorize("@el.check('storeRemain:edit')")
+    public ResponseEntity<Object> ingood(@Validated @RequestBody StoreRemain resources){
+        storeRemainService.ingood(resources);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping(value = "/outgood")
+    @Log("退货")
+    @ApiOperation("退货")
+    @PreAuthorize("@el.check('storeRemain:edit')")
+    public ResponseEntity<Object> outgood(@Validated @RequestBody StoreRemain resources){
+        storeRemainService.outgood(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

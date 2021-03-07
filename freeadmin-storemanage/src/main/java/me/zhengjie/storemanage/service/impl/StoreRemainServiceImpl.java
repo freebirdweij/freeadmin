@@ -86,6 +86,26 @@ public class StoreRemainServiceImpl implements StoreRemainService {
         storeRemain.copy(resources);
         storeRemainRepository.save(storeRemain);
     }
+    
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void ingood(StoreRemain resources) {
+        StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
+        ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
+        resources.setCounts(storeRemain.getCounts()+resources.getCounts());
+        storeRemain.copy(resources);
+        storeRemainRepository.save(storeRemain);
+    }
+    
+    @Override
+   @Transactional(rollbackFor = Exception.class)
+    public void outgood(StoreRemain resources) {
+        StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
+        ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
+        resources.setCounts(storeRemain.getCounts()-resources.getCounts());
+        storeRemain.copy(resources);
+        storeRemainRepository.save(storeRemain);
+    }
 
     @Override
     public void deleteAll(Long[] ids) {
