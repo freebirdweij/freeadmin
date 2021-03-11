@@ -58,4 +58,13 @@ public class StoreOperateDto implements Serializable {
 
     /** 更新时间 */
     private Timestamp updateTime;
+    
+    public static final Integer INGOODS = 1;
+    public static final Integer OUTGOODS = 2;
+    public static final Integer TAKEGOODS = 3;
+    public static final Integer REFUNDGOODS = 4;
+    public static final Integer MOVEGOODSOUT = 5;
+    public static final Integer MOVEGOODSIN = 6;
+    public static final Integer MODIFYGOODS = 7;
+
 }

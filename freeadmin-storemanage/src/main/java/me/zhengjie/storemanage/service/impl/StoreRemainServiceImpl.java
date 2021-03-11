@@ -15,13 +15,17 @@
 */
 package me.zhengjie.storemanage.service.impl;
 
+import me.zhengjie.storemanage.domain.StoreOperate;
 import me.zhengjie.storemanage.domain.StoreRemain;
+import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.storemanage.repository.StoreGoodsRepository;
+import me.zhengjie.storemanage.repository.StoreOperateRepository;
 import me.zhengjie.storemanage.repository.StoreRemainRepository;
 import me.zhengjie.storemanage.service.StoreRemainService;
+import me.zhengjie.storemanage.service.dto.StoreOperateDto;
 import me.zhengjie.storemanage.service.dto.StoreRemainDto;
 import me.zhengjie.storemanage.service.dto.StoreRemainQueryCriteria;
 import me.zhengjie.storemanage.service.mapstruct.StoreRemainMapper;
@@ -34,6 +38,8 @@ import me.zhengjie.utils.QueryHelp;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
+import java.math.BigDecimal;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -51,6 +57,7 @@ public class StoreRemainServiceImpl implements StoreRemainService {
     private final StoreRemainRepository storeRemainRepository;
     private final StoreGoodsRepository storeGoodsRepository;
     private final StoreRemainMapper storeRemainMapper;
+    private final StoreOperateRepository storeOperateRepository;
 
     @Override
     public Map<String,Object> queryAll(StoreRemainQueryCriteria criteria, Pageable pageable){
@@ -74,8 +81,15 @@ public class StoreRemainServiceImpl implements StoreRemainService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public StoreRemainDto create(StoreRemain resources) {
-    	storeGoodsRepository.save(resources.getGoods());
-        return storeRemainMapper.toDto(storeRemainRepository.save(resources));
+    	StoreRemainDto storeRemainDto = storeRemainMapper.toDto(storeRemainRepository.save(resources));
+    	StoreOperate storeOperate = new StoreOperate();
+    	storeOperate.setRemainId(storeRemainDto.getRemainId());
+    	storeOperate.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate.setCounts(storeRemainDto.getCounts());
+    	storeOperate.setAmount(storeRemainDto.getAmount());
+    	storeOperate.setOperateType(StoreOperateDto.INGOODS);
+    	storeOperateRepository.save(storeOperate);
+        return storeRemainDto;
     }
 
     @Override
@@ -90,21 +104,77 @@ public class StoreRemainServiceImpl implements StoreRemainService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void ingood(StoreRemain resources) {
+    	long tempCount = resources.getCounts(); 
         StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
         ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
         resources.setCounts(storeRemain.getCounts()+resources.getCounts());
+    	resources.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(resources.getCounts())));
         storeRemain.copy(resources);
         storeRemainRepository.save(storeRemain);
+    	StoreOperate storeOperate = new StoreOperate();
+    	storeOperate.setRemainId(storeRemain.getRemainId());
+    	storeOperate.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate.setCounts(resources.getCounts());
+    	storeOperate.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
+    	storeOperate.setOperateType(StoreOperateDto.INGOODS);
+    	storeOperateRepository.save(storeOperate);
     }
     
     @Override
-   @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
+    public void refundgood(StoreRemain resources) {
+    	long tempCount = resources.getCounts(); 
+        StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
+        ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
+        resources.setCounts(storeRemain.getCounts()+resources.getCounts());
+    	resources.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(resources.getCounts())));
+        storeRemain.copy(resources);
+        storeRemainRepository.save(storeRemain);
+    	StoreOperate storeOperate = new StoreOperate();
+    	storeOperate.setRemainId(storeRemain.getRemainId());
+    	storeOperate.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate.setCounts(resources.getCounts());
+    	storeOperate.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
+    	storeOperate.setOperateType(StoreOperateDto.REFUNDGOODS);
+    	storeOperateRepository.save(storeOperate);
+    }
+    
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void outgood(StoreRemain resources) {
+    	long tempCount = resources.getCounts(); 
         StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
         ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
         resources.setCounts(storeRemain.getCounts()-resources.getCounts());
+    	resources.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(resources.getCounts())));
         storeRemain.copy(resources);
         storeRemainRepository.save(storeRemain);
+    	StoreOperate storeOperate = new StoreOperate();
+    	storeOperate.setRemainId(storeRemain.getRemainId());
+    	storeOperate.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate.setCounts(resources.getCounts());
+    	storeOperate.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
+    	storeOperate.setOperateType(StoreOperateDto.OUTGOODS);
+    	storeOperateRepository.save(storeOperate);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void takegood(StoreRemain resources) {
+    	long tempCount = resources.getCounts(); 
+        StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
+        ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
+        resources.setCounts(storeRemain.getCounts()-resources.getCounts());
+    	resources.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(resources.getCounts())));
+        storeRemain.copy(resources);
+        storeRemainRepository.save(storeRemain);
+    	StoreOperate storeOperate = new StoreOperate();
+    	storeOperate.setRemainId(storeRemain.getRemainId());
+    	storeOperate.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate.setCounts(resources.getCounts());
+    	storeOperate.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
+    	storeOperate.setOperateType(StoreOperateDto.TAKEGOODS);
+    	storeOperateRepository.save(storeOperate);
     }
 
     @Override

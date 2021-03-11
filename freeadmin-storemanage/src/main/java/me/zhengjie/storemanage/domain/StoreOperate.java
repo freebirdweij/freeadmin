@@ -18,6 +18,7 @@ package me.zhengjie.storemanage.domain;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
 import cn.hutool.core.bean.BeanUtil;
@@ -39,7 +40,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Table(name="store_operate")
-public class StoreOperate implements Serializable {
+public class StoreOperate extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,22 +72,6 @@ public class StoreOperate implements Serializable {
     @NotNull
     @ApiModelProperty(value = "操作金额")
     private BigDecimal amount;
-
-    @Column(name = "create_by")
-    @ApiModelProperty(value = "创建者")
-    private String createBy;
-
-    @Column(name = "update_by")
-    @ApiModelProperty(value = "更新者")
-    private String updateBy;
-
-    @Column(name = "create_time")
-    @ApiModelProperty(value = "创建日期")
-    private Timestamp createTime;
-
-    @Column(name = "update_time")
-    @ApiModelProperty(value = "更新时间")
-    private Timestamp updateTime;
 
     public void copy(StoreOperate source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
