@@ -91,6 +91,12 @@ public interface StoreRemainService {
     void takegood(StoreRemain resources);
 
     /**
+    * 编辑
+    * @param resources /
+    */
+    void movegood(StoreRemain resources);
+
+    /**
     * 多选删除
     * @param ids /
     */
