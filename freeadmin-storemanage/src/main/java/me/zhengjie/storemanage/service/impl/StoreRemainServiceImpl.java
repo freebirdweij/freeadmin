@@ -204,10 +204,24 @@ public class StoreRemainServiceImpl implements StoreRemainService {
     	storeOperateRepository.save(storeOperate);
         StoreRemain storeRemain2 = storeRemainRepository.findByStoreAndGoods(resources.getStoreId(), resources.getGoods().getGoodsId());
         if(storeRemain2!=null){
-        	
+        	storeRemain2.setCounts(storeRemain2.getCounts()+tempCount);
+        	storeRemain2.setAmount(storeRemain2.getGoods().getPrice().multiply(new BigDecimal(storeRemain2.getCounts())));
+        	storeRemainRepository.save(storeRemain2);
         }else{
-        	
+        	storeRemain2 = new StoreRemain();
+            storeRemain2.copy(resources);
+            storeRemain2.setRemainId(null);
+        	storeRemain2.setCounts(storeRemain2.getCounts()+tempCount);
+        	storeRemain2.setAmount(storeRemain2.getGoods().getPrice().multiply(new BigDecimal(storeRemain2.getCounts())));
+        	storeRemain2 = storeRemainRepository.save(resources);
         }
+    	StoreOperate storeOperate2 = new StoreOperate();
+    	storeOperate2.setRemainId(storeRemain2.getRemainId());
+    	storeOperate2.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate2.setCounts(storeRemain2.getCounts());
+    	storeOperate2.setAmount(storeRemain2.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
+    	storeOperate2.setOperateType(StoreOperateDto.MOVEGOODSIN);
+    	storeOperateRepository.save(storeOperate2);
     }
 
     @Override
