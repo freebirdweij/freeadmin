@@ -78,6 +78,17 @@ public interface StoreRemainService {
     * @param resources /
     */
     void outgood(StoreRemain resources);
+    /**
+    * 编辑
+    * @param resources /
+    */
+    void refundgood(StoreRemain resources);
+    
+    /**
+    * 编辑
+    * @param resources /
+    */
+    void takegood(StoreRemain resources);
 
     /**
     * 多选删除
