@@ -97,8 +97,16 @@ public class StoreRemainServiceImpl implements StoreRemainService {
     public void update(StoreRemain resources) {
         StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
         ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
+    	resources.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(resources.getCounts())));
         storeRemain.copy(resources);
-        storeRemainRepository.save(storeRemain);
+        StoreRemainDto storeRemainDto = storeRemainMapper.toDto(storeRemainRepository.save(storeRemain));
+    	StoreOperate storeOperate = new StoreOperate();
+    	storeOperate.setRemainId(storeRemainDto.getRemainId());
+    	storeOperate.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate.setCounts(storeRemainDto.getCounts());
+    	storeOperate.setAmount(storeRemainDto.getAmount());
+    	storeOperate.setOperateType(StoreOperateDto.MODIFYGOODS);
+    	storeOperateRepository.save(storeOperate);
     }
     
     @Override
@@ -175,6 +183,45 @@ public class StoreRemainServiceImpl implements StoreRemainService {
     	storeOperate.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
     	storeOperate.setOperateType(StoreOperateDto.TAKEGOODS);
     	storeOperateRepository.save(storeOperate);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void movegood(StoreRemain resources) {
+    	long tempCount = resources.getCounts(); 
+        StoreRemain storeRemain = storeRemainRepository.findById(resources.getRemainId()).orElseGet(StoreRemain::new);
+        ValidationUtil.isNull( storeRemain.getRemainId(),"StoreRemain","id",resources.getRemainId());
+        resources.setCounts(storeRemain.getCounts()-resources.getCounts());
+    	resources.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(resources.getCounts())));
+        storeRemain.copy(resources);
+        storeRemainRepository.save(storeRemain);
+    	StoreOperate storeOperate = new StoreOperate();
+    	storeOperate.setRemainId(storeRemain.getRemainId());
+    	storeOperate.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate.setCounts(resources.getCounts());
+    	storeOperate.setAmount(resources.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
+    	storeOperate.setOperateType(StoreOperateDto.MOVEGOODSOUT);
+    	storeOperateRepository.save(storeOperate);
+        StoreRemain storeRemain2 = storeRemainRepository.findByStoreAndGoods(resources.getStoreId(), resources.getGoods().getGoodsId());
+        if(storeRemain2!=null){
+        	storeRemain2.setCounts(storeRemain2.getCounts()+tempCount);
+        	storeRemain2.setAmount(storeRemain2.getGoods().getPrice().multiply(new BigDecimal(storeRemain2.getCounts())));
+        	storeRemainRepository.save(storeRemain2);
+        }else{
+        	storeRemain2 = new StoreRemain();
+            storeRemain2.copy(resources);
+            storeRemain2.setRemainId(null);
+        	storeRemain2.setCounts(storeRemain2.getCounts()+tempCount);
+        	storeRemain2.setAmount(storeRemain2.getGoods().getPrice().multiply(new BigDecimal(storeRemain2.getCounts())));
+        	storeRemain2 = storeRemainRepository.save(resources);
+        }
+    	StoreOperate storeOperate2 = new StoreOperate();
+    	storeOperate2.setRemainId(storeRemain2.getRemainId());
+    	storeOperate2.setUserId(SecurityUtils.getCurrentUserId());
+    	storeOperate2.setCounts(storeRemain2.getCounts());
+    	storeOperate2.setAmount(storeRemain2.getGoods().getPrice().multiply(new BigDecimal(tempCount)));
+    	storeOperate2.setOperateType(StoreOperateDto.MOVEGOODSIN);
+    	storeOperateRepository.save(storeOperate2);
     }
 
     @Override

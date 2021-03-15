@@ -15,9 +15,14 @@
 */
 package me.zhengjie.storemanage.repository;
 
+import java.util.Optional;
+import java.util.Set;
+
+import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.storemanage.domain.StoreRemain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 /**
 * @website https://el-admin.vip
@@ -25,4 +30,13 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @date 2021-02-27
 **/
 public interface StoreRemainRepository extends JpaRepository<StoreRemain, Long>, JpaSpecificationExecutor<StoreRemain> {
+    /**
+     * 根据角色ID 查询
+     * @param roleId 角色ID
+     * @return /
+     */
+    @Query(value = "select * from store_remain where " +
+            "store_id = ?1 and goods_id = ?2", nativeQuery = true)
+    StoreRemain findByStoreAndGoods(Long sotreId,Long goodsId);
+
 }
